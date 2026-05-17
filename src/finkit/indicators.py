@@ -30,7 +30,11 @@ def rsi(series: pd.Series, period: int = 14) -> pd.Series:
 
 
 def macd(
-    series: pd.Series, fast: int = 12, slow: int = 26, signal: int = 9, signal_period: int | None = None
+    series: pd.Series,
+    fast: int = 12,
+    slow: int = 26,
+    signal: int = 9,
+    signal_period: int | None = None,
 ) -> tuple[pd.Series, pd.Series, pd.Series]:
     """MACD (line, signal, histogram)."""
     sig = signal_period if signal_period is not None else signal
@@ -53,7 +57,9 @@ def bollinger_bands(
     return upper, middle, lower
 
 
-def atr(high: pd.Series, low: pd.Series, close: pd.Series, period: int = 14) -> pd.Series:
+def atr(
+    high: pd.Series, low: pd.Series, close: pd.Series, period: int = 14
+) -> pd.Series:
     """Average True Range — measures volatility.
 
     Args:
@@ -73,7 +79,9 @@ def atr(high: pd.Series, low: pd.Series, close: pd.Series, period: int = 14) -> 
     return true_range.rolling(window=period).mean()
 
 
-def vwap(high: pd.Series, low: pd.Series, close: pd.Series, volume: pd.Series) -> pd.Series:
+def vwap(
+    high: pd.Series, low: pd.Series, close: pd.Series, volume: pd.Series
+) -> pd.Series:
     """Volume Weighted Average Price (intraday cumulative).
 
     Args:

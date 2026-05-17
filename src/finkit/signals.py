@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Callable
 
 import pandas as pd
@@ -79,7 +79,11 @@ class SignalEngine:
         Returns:
             Self for method chaining.
         """
-        self._rules.append(SignalRule(name=name, condition=condition, direction=direction, weight=weight))
+        self._rules.append(
+            SignalRule(
+                name=name, condition=condition, direction=direction, weight=weight
+            )
+        )
         return self
 
     def evaluate(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -92,12 +96,16 @@ class SignalEngine:
             DataFrame with columns: signal_score, direction, triggered_rules.
         """
         if not self._rules:
-            return pd.DataFrame(index=df.index, columns=["signal_score", "direction", "triggered_rules"])
+            return pd.DataFrame(
+                index=df.index, columns=["signal_score", "direction", "triggered_rules"]
+            )
 
         long_score = pd.Series(0.0, index=df.index)
         short_score = pd.Series(0.0, index=df.index)
         total_long_weight = sum(r.weight for r in self._rules if r.direction == "long")
-        total_short_weight = sum(r.weight for r in self._rules if r.direction == "short")
+        total_short_weight = sum(
+            r.weight for r in self._rules if r.direction == "short"
+        )
 
         triggered: list[pd.Series] = []
 
@@ -119,10 +127,15 @@ class SignalEngine:
 
         # Triggered rules as comma-separated string
         triggered_df = pd.concat(triggered, axis=1)
-        triggered_rules = triggered_df.apply(lambda row: ",".join(r for r in row if r), axis=1)
+        triggered_rules = triggered_df.apply(
+            lambda row: ",".join(r for r in row if r), axis=1
+        )
 
-        return pd.DataFrame({
-            "signal_score": signal_score,
-            "direction": direction,
-            "triggered_rules": triggered_rules,
-        }, index=df.index)
+        return pd.DataFrame(
+            {
+                "signal_score": signal_score,
+                "direction": direction,
+                "triggered_rules": triggered_rules,
+            },
+            index=df.index,
+        )

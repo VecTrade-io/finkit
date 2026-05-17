@@ -7,7 +7,10 @@ import pandas as pd
 
 
 def sharpe_ratio(
-    returns: pd.Series, risk_free_rate: float = 0.0, periods: int = 252, periods_per_year: int | None = None
+    returns: pd.Series,
+    risk_free_rate: float = 0.0,
+    periods: int = 252,
+    periods_per_year: int | None = None,
 ) -> float:
     """Annualized Sharpe Ratio.
 
@@ -25,12 +28,18 @@ def sharpe_ratio(
     return float(np.sqrt(ann) * excess.mean() / std)
 
 
-def sortino_ratio(returns: pd.Series, risk_free_rate: float = 0.0, periods: int = 252) -> float:
+def sortino_ratio(
+    returns: pd.Series, risk_free_rate: float = 0.0, periods: int = 252
+) -> float:
     """Annualized Sortino Ratio (downside deviation only)."""
     excess = returns - risk_free_rate / periods
     downside = excess[excess < 0]
     downside_std = np.sqrt((downside**2).mean())
-    return float(np.sqrt(periods) * excess.mean() / downside_std) if downside_std > 0 else float("inf")
+    return (
+        float(np.sqrt(periods) * excess.mean() / downside_std)
+        if downside_std > 0
+        else float("inf")
+    )
 
 
 def max_drawdown(returns: pd.Series) -> float:

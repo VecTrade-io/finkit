@@ -92,7 +92,8 @@ class TestConstantSeries:
         data = pd.Series([50.0] * 30)
         result = sma(data, period=10)
         valid = result.dropna()
-        assert (valid == pytest.approx(50.0)).all()
+        assert len(valid) > 0
+        assert valid.sub(50.0).abs().max() < 1e-10
 
     def test_ema_constant(self) -> None:
         data = pd.Series([50.0] * 30)

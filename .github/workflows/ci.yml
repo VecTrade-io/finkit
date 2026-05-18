@@ -18,6 +18,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install -e ".[dev]"
-      - run: ruff check src/
-      - run: ruff format --check src/
-      - run: pytest tests/ -v --tb=short
+      - run: ruff check src/ tests/
+      - run: ruff format --check src/ tests/
+      - run: pytest tests/ -v --tb=short --cov=finkit --cov-report=term-missing

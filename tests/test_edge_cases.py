@@ -74,8 +74,26 @@ class TestNaNHandling:
         assert len(result) == 5
 
     def test_rsi_with_nan(self) -> None:
-        data = pd.Series([1.0, 2.0, np.nan, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0,
-                          11.0, 12.0, 13.0, 14.0, 15.0, 16.0])
+        data = pd.Series(
+            [
+                1.0,
+                2.0,
+                np.nan,
+                4.0,
+                5.0,
+                6.0,
+                7.0,
+                8.0,
+                9.0,
+                10.0,
+                11.0,
+                12.0,
+                13.0,
+                14.0,
+                15.0,
+                16.0,
+            ]
+        )
         result = rsi(data, period=14)
         assert len(result) == len(data)
 

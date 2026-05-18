@@ -60,8 +60,8 @@ results = screen(universe_df, rules=[
 ])
 
 # ── Cost Analysis ──
-cost = finkit.calculate_trade_cost(price=150.0, shares=100, commission=0.005)
-drag = finkit.annual_cost_drag(cost, portfolio_value=100_000)
+cost = finkit.calculate_trade_cost(shares=100, price=150.0, commission_per_share=0.005)
+drag = finkit.annual_cost_drag(trades_per_year=200, avg_trade_cost=cost.total, portfolio_value=100_000)
 ```
 
 ## API Reference
@@ -95,7 +95,7 @@ drag = finkit.annual_cost_drag(cost, portfolio_value=100_000)
 | `sharpe_ratio` | `(returns, risk_free_rate=0.0, periods=252)` | Annualized Sharpe Ratio |
 | `sortino_ratio` | `(returns, risk_free_rate=0.0, periods=252)` | Sortino Ratio (downside only) |
 | `max_drawdown` | `(returns)` | Maximum peak-to-trough drawdown |
-| `var` | `(returns, confidence=0.95, method="historical")` | Value at Risk |
+| `var` | `(returns, confidence=0.95, method="historical")` | Value at Risk (historical or parametric) |
 
 ### `finkit.screen`
 
@@ -110,8 +110,8 @@ drag = finkit.annual_cost_drag(cost, portfolio_value=100_000)
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
-| `calculate_trade_cost` | `(price, shares, commission, ...)` | Total trade cost breakdown |
-| `annual_cost_drag` | `(cost, portfolio_value)` | Annualized cost as portfolio drag |
+| `calculate_trade_cost` | `(shares, price, *, commission_per_share, ...)` | Total trade cost breakdown |
+| `annual_cost_drag` | `(trades_per_year, avg_trade_cost, portfolio_value)` | Annualized cost as portfolio drag |
 | `TradeCost` | dataclass | Structured cost result |
 
 ## Design Principles

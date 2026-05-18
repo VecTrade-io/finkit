@@ -93,3 +93,18 @@ class TestVaR:
     def test_confidence_bounds(self, returns: pd.Series) -> None:
         with pytest.raises((ValueError, TypeError)):
             var(returns, confidence=1.5)
+
+    def test_parametric_method(self, returns: pd.Series) -> None:
+        """Parametric VaR uses Gaussian approximation."""
+        result = var(returns, confidence=0.95, method="parametric")
+        assert isinstance(result, float)
+        assert np.isfinite(result)
+        # Should be in similar ballpark as historical
+        hist = var(returns, confidence=0.95, method="historical")
+        assert abs(result - hist) < 0.05  # Within 5% tolerance
+
+    def test_historical_method_explicit(self, returns: pd.Series) -> None:
+        """Explicit method='historical' matches default."""
+        default = var(returns, confidence=0.95)
+        explicit = var(returns, confidence=0.95, method="historical")
+        assert default == explicit

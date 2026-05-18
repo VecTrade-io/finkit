@@ -53,6 +53,30 @@ def max_drawdown(returns: pd.Series) -> float:
     return float(drawdown.min())
 
 
-def var(returns: pd.Series, confidence: float = 0.95) -> float:
-    """Value at Risk (historical method)."""
-    return float(np.percentile(returns.dropna(), (1 - confidence) * 100))
+def var(returns: pd.Series, confidence: float = 0.95, method: str = "historical") -> float:
+    """Value at Risk.
+
+    Args:
+        returns: Series of period returns.
+        confidence: Confidence level (e.g., 0.95 for 95%).
+        method: Calculation method — "historical" or "parametric" (Gaussian).
+
+    Returns:
+        VaR as a float (typically negative, representing loss threshold).
+    """
+    clean = returns.dropna()
+    if method == "parametric":
+        from math import sqrt
+
+        # Inverse normal CDF using rational approximation (Abramowitz & Stegun)
+        p = 1 - confidence
+        # Approximate z-score for small p
+        t = sqrt(-2.0 * np.log(p))
+        z = t - (2.515517 + 0.802853 * t + 0.010328 * t**2) / (
+            1.0 + 1.432788 * t + 0.189269 * t**2 + 0.001308 * t**3
+        )
+        mean = float(clean.mean())
+        std = float(clean.std())
+        return mean - z * std
+    # Default: historical
+    return float(np.percentile(clean, (1 - confidence) * 100))

@@ -1,8 +1,12 @@
 # finkit
 
-[![License](https://img.shields.io/github/license/VecTrade-io/finkit)](LICENSE) [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![CI](https://github.com/VecTrade-io/finkit/actions/workflows/ci.yml/badge.svg)](https://github.com/VecTrade-io/finkit/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/vectrade-finkit)](https://pypi.org/project/vectrade-finkit/)
+[![License](https://img.shields.io/github/license/VecTrade-io/finkit)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![Coverage](https://img.shields.io/badge/coverage-99%25-brightgreen)](https://github.com/VecTrade-io/finkit)
 
-Open-source financial analysis library. Production-grade indicators, signals, and risk metrics.
+Open-source financial analysis library. Production-grade indicators, signals, risk metrics, screening, and cost analysis.
 
 **No VecTrade account required** — this is a standalone library for the quant/fintech community.
 
@@ -18,50 +22,119 @@ pip install vectrade-finkit
 import pandas as pd
 import finkit
 
-# Technical Indicators
+# ── Technical Indicators ──
 df["sma_20"] = finkit.sma(df["close"], period=20)
+df["ema_12"] = finkit.ema(df["close"], period=12)
 df["rsi"] = finkit.rsi(df["close"], period=14)
 macd_line, signal, histogram = finkit.macd(df["close"])
 upper, middle, lower = finkit.bollinger_bands(df["close"])
+df["atr"] = finkit.atr(df["high"], df["low"], df["close"], period=14)
+df["vwap"] = finkit.vwap(df["high"], df["low"], df["close"], df["volume"])
+df["obv"] = finkit.obv(df["close"], df["volume"])
 
-# Signal Detection
+# ── Signal Detection ──
 df["buy_signal"] = finkit.crossover(df["sma_10"], df["sma_50"])
+df["sell_signal"] = finkit.crossunder(df["sma_10"], df["sma_50"])
+df["divergence"] = finkit.divergence(df["close"], df["rsi"])
 
-# Risk Metrics
-sharpe = finkit.sharpe_ratio(returns)
+# ── Signal Engine (composable rules) ──
+engine = finkit.SignalEngine()
+engine.add_rule("rsi_oversold", lambda df: df["rsi"] < 30, direction="long")
+engine.add_rule("macd_cross", lambda df: finkit.crossover(df["macd"], df["signal"]), direction="long")
+signals = engine.evaluate(df)
+
+# ── Risk Metrics ──
+sharpe = finkit.sharpe_ratio(returns, risk_free_rate=0.04)
+sortino = finkit.sortino_ratio(returns)
 mdd = finkit.max_drawdown(equity_curve)
 value_at_risk = finkit.var(returns, confidence=0.95)
 
-# Stock Screening
+# ── Stock Screening ──
 from finkit import Rule, screen
 
 results = screen(universe_df, rules=[
     Rule("pe_ratio", "<", 25),
     Rule("market_cap", ">", 10_000_000_000),
     Rule("rsi_14", "between", (30, 70)),
+    Rule("sector", "in", ["Technology", "Healthcare"]),
 ])
+
+# ── Cost Analysis ──
+cost = finkit.calculate_trade_cost(price=150.0, shares=100, commission=0.005)
+drag = finkit.annual_cost_drag(cost, portfolio_value=100_000)
 ```
 
-## Modules
+## API Reference
 
-| Module | Functions |
-|--------|-----------|
-| `finkit.indicators` | `sma`, `ema`, `rsi`, `macd`, `bollinger_bands` |
-| `finkit.signals` | `crossover`, `divergence` |
-| `finkit.risk` | `sharpe_ratio`, `sortino_ratio`, `max_drawdown`, `var` |
-| `finkit.screen` | `Rule`, `screen` |
+### `finkit.indicators`
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `sma` | `(series, period=20)` | Simple Moving Average |
+| `ema` | `(series, period=20)` | Exponential Moving Average |
+| `rsi` | `(series, period=14)` | Relative Strength Index (0–100) |
+| `macd` | `(series, fast=12, slow=26, signal=9)` | MACD → `(line, signal, histogram)` |
+| `bollinger_bands` | `(series, period=20, std_dev=2.0)` | Bollinger → `(upper, middle, lower)` |
+| `atr` | `(high, low, close, period=14)` | Average True Range (volatility) |
+| `vwap` | `(high, low, close, volume)` | Volume Weighted Average Price |
+| `obv` | `(close, volume)` | On-Balance Volume |
+
+### `finkit.signals`
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `crossover` | `(fast, slow)` | Bullish crossover detection (boolean Series) |
+| `crossunder` | `(fast, slow)` | Bearish crossunder detection (boolean Series) |
+| `divergence` | `(price, indicator, window=14)` | Bullish divergence detection |
+| `SignalEngine` | class | Composable rule-based signal scoring engine |
+
+### `finkit.risk`
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `sharpe_ratio` | `(returns, risk_free_rate=0.0, periods=252)` | Annualized Sharpe Ratio |
+| `sortino_ratio` | `(returns, risk_free_rate=0.0, periods=252)` | Sortino Ratio (downside only) |
+| `max_drawdown` | `(returns)` | Maximum peak-to-trough drawdown |
+| `var` | `(returns, confidence=0.95, method="historical")` | Value at Risk |
+
+### `finkit.screen`
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `Rule` | `(field, operator, value)` | Screening rule definition |
+| `screen` | `(df, rules)` | Apply rules and return matching rows |
+
+**Supported operators:** `<`, `<=`, `>`, `>=`, `==`, `!=`, `between`, `in`, `contains`
+
+### `finkit.costs`
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `calculate_trade_cost` | `(price, shares, commission, ...)` | Total trade cost breakdown |
+| `annual_cost_drag` | `(cost, portfolio_value)` | Annualized cost as portfolio drag |
+| `TradeCost` | dataclass | Structured cost result |
 
 ## Design Principles
 
 - **Zero API dependency** — works with any pandas DataFrame
 - **NumPy vectorized** — fast computation on large datasets
 - **Minimal dependencies** — only `numpy` and `pandas`
-- **Well-tested** — 95%+ coverage with property-based tests
+- **Fully typed** — `py.typed` marker, works with mypy/pyright
+- **Well-tested** — 99% branch coverage
 
-## Documentation
+## Part of the VecTrade Ecosystem
 
-Full API reference at [docs.vectrade.io/finkit](https://docs.vectrade.io/sdks/finkit).
+| Package | Description |
+|---------|-------------|
+| [`vectrade`](https://github.com/VecTrade-io/vectrade-python) | Python SDK for VecTrade API |
+| [`@vectrade/sdk`](https://github.com/VecTrade-io/vectrade-node) | TypeScript/Node SDK |
+| [`vectrade-finkit`](https://github.com/VecTrade-io/finkit) | Financial computation library (this package) |
+| [`@vectrade/ai-provider`](https://github.com/VecTrade-io/vectrade-ai-provider) | Vercel AI SDK provider |
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
 
 ## License
 
-Apache-2.0
+Apache-2.0 — see [LICENSE](LICENSE).

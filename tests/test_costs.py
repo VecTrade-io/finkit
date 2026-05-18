@@ -55,19 +55,13 @@ class TestAnnualCostDrag:
     """Test annual cost drag calculation."""
 
     def test_typical_case(self) -> None:
-        drag = annual_cost_drag(
-            trades_per_year=100, avg_trade_cost=10.0, portfolio_value=100_000
-        )
+        drag = annual_cost_drag(trades_per_year=100, avg_trade_cost=10.0, portfolio_value=100_000)
         assert drag == pytest.approx(0.01)
 
     def test_zero_portfolio(self) -> None:
-        drag = annual_cost_drag(
-            trades_per_year=50, avg_trade_cost=5.0, portfolio_value=0
-        )
+        drag = annual_cost_drag(trades_per_year=50, avg_trade_cost=5.0, portfolio_value=0)
         assert drag == 0.0
 
     def test_low_frequency(self) -> None:
-        drag = annual_cost_drag(
-            trades_per_year=12, avg_trade_cost=20.0, portfolio_value=500_000
-        )
+        drag = annual_cost_drag(trades_per_year=12, avg_trade_cost=20.0, portfolio_value=500_000)
         assert drag == pytest.approx(0.00048)

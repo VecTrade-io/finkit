@@ -52,8 +52,14 @@ class SignalEngine:
 
     Usage:
         engine = SignalEngine()
-        engine.add_rule("rsi_oversold", lambda df: df["rsi"] < 30, direction="long")
-        engine.add_rule("macd_cross", lambda df: crossover(df["macd"], df["signal"]), direction="long")
+        engine.add_rule(
+            "rsi_oversold", lambda df: df["rsi"] < 30, direction="long"
+        )
+        engine.add_rule(
+            "macd_cross",
+            lambda df: crossover(df["macd"], df["signal"]),
+            direction="long",
+        )
         signals = engine.evaluate(df)
     """
 
@@ -80,9 +86,7 @@ class SignalEngine:
             Self for method chaining.
         """
         self._rules.append(
-            SignalRule(
-                name=name, condition=condition, direction=direction, weight=weight
-            )
+            SignalRule(name=name, condition=condition, direction=direction, weight=weight)
         )
         return self
 
@@ -103,9 +107,7 @@ class SignalEngine:
         long_score = pd.Series(0.0, index=df.index)
         short_score = pd.Series(0.0, index=df.index)
         total_long_weight = sum(r.weight for r in self._rules if r.direction == "long")
-        total_short_weight = sum(
-            r.weight for r in self._rules if r.direction == "short"
-        )
+        total_short_weight = sum(r.weight for r in self._rules if r.direction == "short")
 
         triggered: list[pd.Series] = []
 
@@ -115,7 +117,8 @@ class SignalEngine:
                 long_score += mask.astype(float) * (rule.weight / total_long_weight)
             elif rule.direction == "short" and total_short_weight > 0:
                 short_score += mask.astype(float) * (rule.weight / total_short_weight)
-            triggered.append(mask.map(lambda x: rule.name if x else ""))
+            rule_name = rule.name
+            triggered.append(mask.map(lambda x, n=rule_name: n if x else ""))
 
         # Determine direction per row
         direction = pd.Series("neutral", index=df.index)
@@ -127,9 +130,7 @@ class SignalEngine:
 
         # Triggered rules as comma-separated string
         triggered_df = pd.concat(triggered, axis=1)
-        triggered_rules = triggered_df.apply(
-            lambda row: ",".join(r for r in row if r), axis=1
-        )
+        triggered_rules = triggered_df.apply(lambda row: ",".join(r for r in row if r), axis=1)
 
         return pd.DataFrame(
             {

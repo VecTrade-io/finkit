@@ -55,12 +55,8 @@ class TestSignalEngine:
 
     def test_multiple_rules(self, sample_df: pd.DataFrame) -> None:
         engine = SignalEngine()
-        engine.add_rule(
-            "rsi_oversold", lambda df: df["rsi"] < 30, direction="long", weight=1.0
-        )
-        engine.add_rule(
-            "macd_positive", lambda df: df["macd"] > 0, direction="long", weight=1.0
-        )
+        engine.add_rule("rsi_oversold", lambda df: df["rsi"] < 30, direction="long", weight=1.0)
+        engine.add_rule("macd_positive", lambda df: df["macd"] > 0, direction="long", weight=1.0)
         result = engine.evaluate(sample_df)
         # At index 0: rsi=45 (no), macd=0.5 (yes) → score = 0.5
         assert result.loc[0, "signal_score"] == pytest.approx(0.5)
@@ -74,9 +70,7 @@ class TestSignalEngine:
 
     def test_method_chaining(self) -> None:
         engine = SignalEngine()
-        result = engine.add_rule("a", lambda df: df["x"] > 0).add_rule(
-            "b", lambda df: df["x"] < 0
-        )
+        result = engine.add_rule("a", lambda df: df["x"] > 0).add_rule("b", lambda df: df["x"] < 0)
         assert result is engine
         assert len(engine._rules) == 2
 

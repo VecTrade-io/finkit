@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from finkit.risk import sharpe_ratio, sortino_ratio, max_drawdown, var
+from finkit.risk import max_drawdown, sharpe_ratio, sortino_ratio, var
 
 
 @pytest.fixture

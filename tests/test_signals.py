@@ -93,6 +93,15 @@ class TestSignalEngine:
         assert result.loc[7, "direction"] == "short"
         assert result.loc[7, "signal_score"] > 0
 
+    def test_neutral_direction_rule(self, sample_df: pd.DataFrame) -> None:
+        """Rules with non-standard direction don't contribute to scores."""
+        engine = SignalEngine()
+        engine.add_rule("info", lambda df: df["rsi"] > 50, direction="neutral")
+        result = engine.evaluate(sample_df)
+        # Neutral rules don't affect long/short scores
+        assert (result["signal_score"] == 0).all()
+        assert (result["direction"] == "neutral").all()
+
 
 class TestDivergence:
     """Test bullish divergence detection."""

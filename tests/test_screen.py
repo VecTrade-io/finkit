@@ -123,3 +123,9 @@ class TestScreen:
         rules = [Rule(field="sector", operator="!=", value="Technology")]
         result = screen(universe, rules)
         assert len(result) == 1
+
+    def test_unknown_operator_ignored(self, universe: pd.DataFrame) -> None:
+        """Unrecognized operator is silently ignored (no filtering applied)."""
+        rules = [Rule(field="pe_ratio", operator="unknown_op", value=100)]
+        result = screen(universe, rules)
+        assert len(result) == len(universe)

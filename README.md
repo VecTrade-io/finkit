@@ -131,6 +131,10 @@ drag = finkit.annual_cost_drag(trades_per_year=200, avg_trade_cost=cost.total, p
 | [`vectrade-finkit`](https://github.com/VecTrade-io/finkit) | Financial computation library (this package) |
 | [`@vectrade/ai-provider`](https://github.com/VecTrade-io/vectrade-ai-provider) | Vercel AI SDK provider |
 
+## Documentation
+
+Full documentation is available at [docs.vectrade.io/sdks/finkit](https://docs.vectrade.io/sdks/finkit).
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.

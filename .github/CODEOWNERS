@@ -1,1 +1,17 @@
-* @VecTrade-io/core-team
+# ─── CODEOWNERS ─────────────────────────────────────────────────────────────
+# Maps file patterns to owners/agents responsible for review.
+
+# ── Default ─────────────────────────────────────────────────────────────────
+*                           @mountek
+
+# ── CI / DevOps ─────────────────────────────────────────────────────────────
+.github/workflows/          @mountek
+
+# ── FinKit source (vt-finkit-dev) ──────────────────────────────────────────
+src/                        @mountek
+
+# ── Tests (vt-finkit-tester) ───────────────────────────────────────────────
+tests/                      @mountek
+
+# ── Build config ────────────────────────────────────────────────────────────
+pyproject.toml              @mountek

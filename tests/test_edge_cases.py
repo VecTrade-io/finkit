@@ -4,9 +4,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from finkit.indicators import sma, ema, rsi, macd, bollinger_bands, atr, vwap, obv
+from finkit.indicators import atr, bollinger_bands, ema, macd, obv, rsi, sma, vwap
 from finkit.signals import crossover, crossunder
-
 
 # ── Indicators: edge cases ──────────────────────────────────────────────
 
@@ -74,8 +73,26 @@ class TestNaNHandling:
         assert len(result) == 5
 
     def test_rsi_with_nan(self) -> None:
-        data = pd.Series([1.0, 2.0, np.nan, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0,
-                          11.0, 12.0, 13.0, 14.0, 15.0, 16.0])
+        data = pd.Series(
+            [
+                1.0,
+                2.0,
+                np.nan,
+                4.0,
+                5.0,
+                6.0,
+                7.0,
+                8.0,
+                9.0,
+                10.0,
+                11.0,
+                12.0,
+                13.0,
+                14.0,
+                15.0,
+                16.0,
+            ]
+        )
         result = rsi(data, period=14)
         assert len(result) == len(data)
 
@@ -184,7 +201,7 @@ class TestCrossover:
         fast = pd.Series([5, 6, 7, 8, 9, 10])
         slow = pd.Series([8, 8, 8, 8, 8, 8])
         result = crossover(fast, slow)
-        # fast crosses above slow at index 3 (fast=8>slow=8 is False, index 4: 9>8, shift check 8<=8)
+        # fast crosses above slow at index 4: 9>8, shift check 8<=8
         assert result.iloc[4] is np.True_
 
     def test_no_crossover(self) -> None:

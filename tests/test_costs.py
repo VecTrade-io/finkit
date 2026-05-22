@@ -2,7 +2,7 @@
 
 import pytest
 
-from finkit.costs import TradeCost, annual_cost_drag, calculate_trade_cost
+from finkit.costs import annual_cost_drag, calculate_trade_cost
 
 
 class TestCalculateTradeCost:

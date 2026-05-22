@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from finkit.indicators import sma, ema, rsi, macd, bollinger_bands
+from finkit.indicators import bollinger_bands, ema, macd, rsi, sma
 
 
 @pytest.fixture

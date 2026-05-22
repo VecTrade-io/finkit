@@ -57,9 +57,7 @@ def bollinger_bands(
     return upper, middle, lower
 
 
-def atr(
-    high: pd.Series, low: pd.Series, close: pd.Series, period: int = 14
-) -> pd.Series:
+def atr(high: pd.Series, low: pd.Series, close: pd.Series, period: int = 14) -> pd.Series:
     """Average True Range — measures volatility.
 
     Args:
@@ -79,9 +77,7 @@ def atr(
     return true_range.rolling(window=period).mean()
 
 
-def vwap(
-    high: pd.Series, low: pd.Series, close: pd.Series, volume: pd.Series
-) -> pd.Series:
+def vwap(high: pd.Series, low: pd.Series, close: pd.Series, volume: pd.Series) -> pd.Series:
     """Volume Weighted Average Price (intraday cumulative).
 
     Args:

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-05-29
+
+### Changed
+
+- **Stable release** — all public APIs finalized, semver enforced from this point
+
 ## [0.1.0] - 2026-05-15
 
 ### Added
@@ -19,3 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cost analysis: `calculate_trade_cost`, `annual_cost_drag`, `TradeCost`
 - 99% test coverage with branch coverage
 - CI/CD with GitHub Actions (Python 3.9–3.12)
+
+[Unreleased]: https://github.com/VecTrade-io/finkit/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/VecTrade-io/finkit/compare/v0.1.0...v1.0.0
+[0.1.0]: https://github.com/VecTrade-io/finkit/releases/tag/v0.1.0

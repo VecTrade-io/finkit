@@ -6,9 +6,24 @@
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Coverage](https://img.shields.io/badge/coverage-99%25-brightgreen)](https://github.com/VecTrade-io/finkit)
 
-Open-source financial analysis library. Production-grade indicators, signals, risk metrics, screening, and cost analysis.
+Open-source financial analysis library. Production-grade indicators, signals, risk metrics, screening, and cost analysis — all vectorized with NumPy for maximum performance.
 
-**No VecTrade account required** — this is a standalone library for the quant/fintech community.
+**No API key required. No account needed.** This is a free, standalone library for the quant community.
+
+## Why finkit?
+
+| | finkit | TA-Lib | pandas-ta | backtrader |
+|---|:---:|:---:|:---:|:---:|
+| Pure Python (no C deps) | ✅ | ❌ | ✅ | ✅ |
+| Type-safe (py.typed) | ✅ | ❌ | ❌ | ❌ |
+| Signal composition engine | ✅ | ❌ | ❌ | ✅ |
+| Stock screener built-in | ✅ | ❌ | ❌ | ❌ |
+| Risk metrics (Sharpe, VaR) | ✅ | ❌ | ❌ | ❌ |
+| Cost analysis | ✅ | ❌ | ❌ | ❌ |
+| Zero config | ✅ | ❌ | ✅ | ❌ |
+| Maintained (2024–) | ✅ | ❌ | ⚠️ | ❌ |
+
+**finkit gives you everything in one package** — indicators, signals, risk, screening, and cost analysis — with zero native dependencies and full type safety.
 
 ## Installation
 
@@ -122,6 +137,22 @@ drag = finkit.annual_cost_drag(trades_per_year=200, avg_trade_cost=cost.total, p
 - **Fully typed** — `py.typed` marker, works with mypy/pyright
 - **Well-tested** — 99% branch coverage
 
+## Use Cases
+
+- **Algorithmic trading** — build signal engines and backtest strategies
+- **Portfolio analytics** — Sharpe, Sortino, drawdown, VaR for any portfolio
+- **Stock screening** — filter universes of 5,000+ stocks in milliseconds
+- **Jupyter notebooks** — quick technical analysis with pandas integration
+- **Production pipelines** — ETL-friendly, typed outputs, no side effects
+- **Education** — clean API to teach technical analysis concepts
+
+## Community
+
+- 💬 [Discord](https://discord.gg/vectrade) — questions, showcase, discussion
+- 🐛 [Issues](https://github.com/VecTrade-io/finkit/issues) — bug reports & feature requests
+- 📖 [Docs](https://docs.vectrade.io/sdks/finkit) — full API reference
+- ⭐ Star this repo to help others discover it!
+
 ## Part of the VecTrade Ecosystem
 
 | Package | Description |
@@ -137,7 +168,9 @@ Full documentation is available at [docs.vectrade.io/sdks/finkit](https://docs.v
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
+Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
+
+Found finkit useful? Please ⭐ star the repo — it helps others discover the project.
 
 ## License
 

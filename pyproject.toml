@@ -10,9 +10,9 @@ readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.9"
 authors = [{ name = "VecTrade", email = "oss@vectrade.io" }]
-keywords = ["finance", "trading", "indicators", "risk", "signals", "quant", "backtesting"]
+keywords = ["finance", "trading", "indicators", "technical-analysis", "risk", "signals", "quant", "backtesting", "sharpe-ratio", "stock-screening", "portfolio", "numpy", "pandas"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Intended Audience :: Financial and Insurance Industry",
     "License :: OSI Approved :: Apache Software License",
